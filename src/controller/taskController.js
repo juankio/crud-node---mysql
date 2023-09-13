@@ -5,7 +5,7 @@ function index(req, res){
                 res.json(err);
             }
             // console.log('>:)',tasks);
-            res.render('task/index') 
+            res.render('task/index',{tasks}) 
         });
     })
 }
@@ -21,9 +21,44 @@ function store(req, res){
     })
     // res.render('task/store') 
 }
+function destroy(req,res){
+ const id =req.body.id;
+ req.getConnection((err,con)=>{
+    con.query("DELETE FROM tasks WHERE id = ?", [id], (err, rows)=>{
+        res.redirect('/task')
+    })
+ })
+}
+
+function edit(req, res){
+    const id =req.params.id;
+    req.getConnection((err,con)=>{
+        con.query("SELECT * FROM tasks WHERE id = ? ",[id], (err, tasks)=>{
+            if(err){
+                res.json(err);
+            }
+            // console.log('>:)',tasks); 
+            res.render("task/edit", {tasks});
+        });
+    })
+}
+function update(req, res) {
+    const id =req.params.id;
+    const data =req.body;
+    // console.log('>:)',id+data)
+    req.getConnection((err,con)=>{
+        con.query('UPDATE tasks SET ? WHERE id = ?', [data, id], (err,rows)=>{
+            res.redirect('/task');
+        });
+    })
+    
+}
 
 module.exports={
     index:index,
     create:create,
-    store:store
+    store:store,
+    destroy:destroy,
+    edit:edit,
+    update:update,
 }
