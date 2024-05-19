@@ -1,7 +1,8 @@
 <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+    <button id="download" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"> Descargar PDF
+    </button>
     <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg mt-12">
-
-        <table class="table-fixed w-full">
+        <table id="myTable" class="table-fixed w-full">
             <thead>
                 <tr class="bg-green-500 text-white">
                     <th class="w-20 py-4 ...">ID</th>
@@ -19,10 +20,10 @@
                     <td class="p-3 flex">
                         <form action="/task/delete" method="POST" class="mx-2">
                             <input type="hidden" value="{{id}}" name="id">
-                            <button class="bg-red-500 text-while px-3 py-1 rounded-sm" type="submit">
+                            <button class="bg-red-500 text-white px-3 py-1 rounded-sm" type="submit">
                                 <i class="fas fa-trash"></i></button>
                         </form>
-                        <a href="/task/edit/{{id}}" class="bg-green-500 text-while px-3 py-1 rounded-sm" type="submit">
+                        <a href="/task/edit/{{id}}" class="bg-green-500 text-white px-3 py-1 rounded-sm" type="submit">
                             <i class="fas fa-pen"></i></a>
                         </form>
                     </td>
@@ -32,3 +33,21 @@
         </table>
     </div>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js"></script>
+<script>
+    window.onload = function () {
+        document.getElementById("download").addEventListener("click", function () {
+            var pdf = new jsPDF();
+            pdf.text('Tabla del crud ', 10, 10);
+            var table = document.getElementById("myTable");
+            var rows = table.getElementsByTagName("tr");
+            for (var i = 0; i < rows.length; i++) {
+                var cells = rows[i].getElementsByTagName("td");
+                for (var j = 0; j < cells.length; j++) {
+                    pdf.text(cells[j].innerText, 10 + j * 50, 20 + i * 10);
+                }
+            }
+            pdf.save('pedrito.pdf');
+        });
+    };
+</script>
